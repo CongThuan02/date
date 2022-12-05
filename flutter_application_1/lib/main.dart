@@ -31,6 +31,19 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String defaulvalue = "22/12/2002";
+  DateTime _date = DateTime.now();
+  Future<Null> _selectDate(BuildContext context) async {
+    DateTime? _datePicker = await showDatePicker(
+        context: context,
+        initialDate: _date,
+        firstDate: DateTime(2015),
+        lastDate: DateTime.now()) as DateTime?;
+    if (_datePicker != null && _datePicker != _date) {
+      _date = _datePicker;
+      defaulvalue = _datePicker.toString();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,14 +51,23 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(
           margin: const EdgeInsets.all(12),
           // ignore: prefer_const_constructors
-          child: TextField(
+          child: TextFormField(
             controller: TextEditingController(text: defaulvalue),
-            onChanged: (value) {
-              defaulvalue = value ?? this.defaulvalue;
-            },
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
+              suffix: InkWell(
+                onTap: () {
+                  setState(() {
+                    _selectDate(context);
+                  });
+                },
+                // ignore: prefer_const_constructors
+                child: Icon(
+                  Icons.date_range,
+                ),
+              ),
               border: OutlineInputBorder(),
             ),
+            onChanged: (context) => {defaulvalue = context},
           ),
         ),
       ),
